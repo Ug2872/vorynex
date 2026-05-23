@@ -231,7 +231,7 @@
                     showView('view-success');
                     
                     // Signal Android app of success
-                    window.location.href = "vorynex://payment-success.html";
+                    window.location.href = "https://vorynex.in/payment-success.html";
                     
                     // Attempt to close the window
                     setTimeout(() => {
@@ -251,9 +251,9 @@
             // Signal Android app first to handle custom tab closure/resume
             const isSuccess = document.getElementById('view-success').classList.contains('active');
             if (isSuccess) {
-                window.location.href = "vorynex://payment-success.html";
+                window.location.href = "https://vorynex.in/payment-success.html";
             } else {
-                window.location.href = "vorynex://payment-failed.html";
+                window.location.href = "https://vorynex.in/payment-failed.html";
             }
 
             // Attempt standard close
