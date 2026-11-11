@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
     const encResp = (req.body && req.body.encResp) || req.query.encResp || "";
-    const backend = await fetch("https://pay.vorynex.in/api/v1.0/payment/ccavenue/response", {
+    const backend = await fetch("https://api.iquickofficial.site/api/v1.0/payment/ccavenue/response", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ encResp: String(encResp) }).toString()
