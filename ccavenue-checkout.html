@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure checkout | Vorynex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Outfit, sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b0f1a;
+            color: #f4f4f5;
+        }
+        .card { text-align: center; max-width: 360px; padding: 24px; }
+        .ring {
+            width: 72px; height: 72px; margin: 0 auto 24px;
+            border: 3px solid rgba(255,255,255,.08);
+            border-top-color: #818cf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .label { letter-spacing: .16em; text-transform: uppercase; color: #818cf8; font-size: 13px; font-weight: 700; }
+        .detail { margin-top: 10px; color: #a1a1aa; }
+        .error { display: none; color: #fca5a5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="ring" id="ring"></div>
+        <p class="label">Vorynex checkout</p>
+        <p class="detail" id="detail">Starting payment on vorynex.in</p>
+        <p class="error" id="error"></p>
+    </div>
+    <script>
+        const API = "https://pay.vorynex.in/api/v1.0/payment/create";
+
+        function fail(message) {
+            document.getElementById("ring").style.display = "none";
+            const error = document.getElementById("error");
+            error.style.display = "block";
+            error.textContent = message;
+        }
+
+        async function start() {
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get("merchantorderid") || params.get("orderId");
+            const amount = params.get("price") || params.get("amount");
+            const email = params.get("email") || "";
+            const phone = params.get("phone") || "";
+            const plan = params.get("plan") || "";
+            if (!orderId || !amount) {
+                fail("This checkout link is missing the order or amount.");
+                return;
+            }
+            document.getElementById("detail").textContent = plan + " · ₹" + amount;
+            const response = await fetch(API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    amount: Number(amount).toFixed(2),
+                    currency: "INR",
+                    billingEmail: email,
+                    billingPhone: phone,
+                    plan: plan
+                })
+            });
+            if (!response.ok) {
+                fail("Payment could not be started. Please return to the app and try again.");
+                return;
+            }
+            const data = await response.json();
+            if (!data.encRequest || !data.accessCode || !data.ccavenueUrl) {
+                fail("Checkout details were incomplete.");
+                return;
+            }
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = data.ccavenueUrl;
+            const enc = document.createElement("input");
+            enc.type = "hidden";
+            enc.name = "encRequest";
+            enc.value = data.encRequest;
+            const access = document.createElement("input");
+            access.type = "hidden";
+            access.name = "access_code";
+            access.value = data.accessCode;
+            form.append(enc, access);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        start().catch(() => fail("Could not reach the payment server."));
+    </script>
+</body>
+</html>
