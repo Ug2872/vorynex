@@ -46,7 +46,7 @@
         return "wait";
     }
 
-    fetch("https://api.iquickofficial.site/api/v1.0/payment/records")
+    fetch("/api/ccavenue-records")
         .then((response) => response.json())
         .then((rows) => {
             document.getElementById("summary").textContent = rows.length + " payment records";
