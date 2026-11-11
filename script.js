@@ -453,17 +453,17 @@
 
     const planData = {
       'Web Starter': {
-        price: 1,
+        price: 9999,
         desc: 'Essential digital presence',
         features: ['Professional Website', '1 Custom Domain', '12 Months Hosting', '6 Months Support', 'Basic SEO']
       },
       'Business Growth': {
-        price: 1,
+        price: 24999,
         desc: 'Advanced tools & mobile integration',
         features: ['Premium Web + Android App', '2 Custom Domains', '24 Months Hosting', '12 Months Support', 'Play Store Publishing', 'Social Marketing']
       },
       'Enterprise Suite': {
-        price: 1,
+        price: 60000,
         desc: 'Ultimate enterprise business suite',
         features: ['Enterprise Web + Native App', '5 Custom Domains', '24 Months Hosting Included', '24 Months Dedicated Support', 'ASO & Full Marketing', 'AI Automation Tools']
       }
@@ -475,9 +475,9 @@
       
       document.getElementById('summary-plan-name').textContent = planName;
       document.getElementById('summary-plan-desc').textContent = data.desc;
-      document.getElementById('summary-plan-price').textContent = '₹' + price.toLocaleString();
-      document.getElementById('summary-subtotal').textContent = '₹' + price.toLocaleString();
-      document.getElementById('summary-total').textContent = '₹' + price.toLocaleString();
+      document.getElementById('summary-plan-price').textContent = '₹' + price.toLocaleString('en-IN');
+      document.getElementById('summary-subtotal').textContent = '₹' + price.toLocaleString('en-IN');
+      document.getElementById('summary-total').textContent = '₹' + price.toLocaleString('en-IN');
 
       const featureList = document.getElementById('summary-plan-features');
       if (featureList) {
@@ -491,7 +491,7 @@
       
       const checkoutBtn = document.getElementById('final-checkout-btn');
       if (checkoutBtn) {
-        checkoutBtn.textContent = `Checkout • ₹${price.toLocaleString()}`;
+        checkoutBtn.textContent = `Checkout • ₹${price.toLocaleString('en-IN')}`;
       }
 
       checkoutModal.classList.remove('hidden');
